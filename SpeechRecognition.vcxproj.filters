@@ -22,5 +22,6 @@
     <None Include="dll.def">
       <Filter>Code</Filter>
     </None>
+    <None Include="Readme.md" />
   </ItemGroup>
 </Project>
