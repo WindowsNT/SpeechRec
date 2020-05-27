@@ -15,7 +15,7 @@ std::vector<std::tuple<std::wstring, std::wstring>> sx;
 SpeechX1((void*)&sx, 0, 0, 2);
 for (auto& e : sx)
 {
-	std::wcout << std::get<0>(e) << L" - " << std::get<1>(e) << std::endl;
+ std::wcout << std::get<0>(e) << L" - " << std::get<1>(e) << std::endl;
 }
 ```
 
@@ -26,7 +26,7 @@ HRESULT __stdcall  MyCallback(void* ptr, const wchar_t* reco, int conf);
 SpeechX1(some_ptr, MyCallback, L"en-US", 0);
 ```
 Where
-- ptr the value passed to SpeechX1
+- ptr is the value passed to SpeechX1 as some_ptr
 - If reco is nullptr, then the recognizer is in idle state. Return S_OK to continue. If you return E_FAIL, session ends.
 - If reco is text, then conf is the confidence mode:
 - If -1, it's still in recognition mode
