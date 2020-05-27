@@ -26,14 +26,11 @@ HRESULT __stdcall  MyCallback(void* ptr, const wchar_t* reco, int conf);
 SpeechX1(some_ptr, MyCallback, L"en-US", 0);
 ```
 Where
-	* - ptr = the value passed to SpeechX1
-	* - If reco is nullptr, then the recognizer is in idle state. Return S_OK to continue. If you return E_FAIL, session ends.
-	* - If reco is text, then conf is the confidence mode:
-		* If -1, it's still in recognition mode
-		* If 0, high confidence
-		* If 1, medium
-		* If 2, low
-		* If 3, bad
+- ptr the value passed to SpeechX1
+- If reco is nullptr, then the recognizer is in idle state. Return S_OK to continue. If you return E_FAIL, session ends.
+- If reco is text, then conf is the confidence mode:
+- If -1, it's still in recognition mode
+- If 0,1,2,3 high/medium/low/bad confidence
 
 return S_OK to continue, E_FAIL to stop.
 
