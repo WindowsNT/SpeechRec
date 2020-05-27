@@ -1,8 +1,8 @@
 # Speech Recognition C++ with UWP for plain Win32
 
-An easy way to implement Windows SpeechRecognizer UWP in your Win32 Apps
+An easy way to implement Windows SpeechRecognizer UWP in your Win32 Apps. Available as DLL and as Static library, in both x64 and x86.
 
-Your function is:
+Your library function is:
 
 ```C++
 HRESULT __stdcall  SpeechX1(void* ptr, SpeechX2 x2, const wchar_t* langx = L"en-us", int Mode = 0);
