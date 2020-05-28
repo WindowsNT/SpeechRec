@@ -129,15 +129,43 @@ HRESULT __stdcall  SpeechX1(void* ptr, SpeechX2 x2, const wchar_t* langx = L"en-
 #ifndef STATICLIB
 extern "C"
 #endif
-HRESULT __stdcall  SpeechX3(const wchar_t* t, std::vector<uint8_t> * tx, bool XML)
+HRESULT __stdcall  SpeechX3(const wchar_t* t, void * ptr, bool XML,size_t iVoice)
 {
-	if (!tx)
+	if (!ptr)
 		return E_POINTER;
+
+	if (!t)
+	{
+		std::vector<std::tuple<std::wstring, std::wstring>>* sx = (std::vector<std::tuple<std::wstring, std::wstring>>*)ptr;
+		SpeechSynthesizer sy;
+		auto vo = sy.AllVoices();
+		auto sz = vo.Size();
+		for (uint32_t i = 0; i < sz; i++)
+		{
+			auto ll = vo.GetAt(i).as<VoiceInformation>();
+			auto str = ll.DisplayName();
+			auto str2 = str.c_str();
+			auto str3 = ll.Language();
+			auto str4 = str3.c_str();
+
+			auto tu = std::make_tuple<std::wstring, std::wstring>(str2, str4);
+			sx->push_back(tu);
+		}
+
+		return S_OK;
+	}
+
+	std::vector<uint8_t>* tx = (std::vector<uint8_t>*)ptr;
 	tx->clear();
 	HANDLE hEv1 = CreateEvent(0, 0, 0, 0);
 	try
 	{
 		SpeechSynthesizer sy;
+		auto vo = sy.AllVoices();
+		auto sz = vo.Size();
+		if (iVoice < sz)
+			sy.Voice(vo.GetAt(iVoice).as<VoiceInformation>());
+
 		IAsyncOperation<SpeechSynthesisStream> as = XML ? sy.SynthesizeSsmlToStreamAsync(t) : sy.SynthesizeTextToStreamAsync(t);
 		as.Completed([&](const IInspectable& sender, AsyncStatus h)
 			{

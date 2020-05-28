@@ -12,11 +12,11 @@ processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 typedef HRESULT(__stdcall* SpeechX2)(void* ptr, const wchar_t* reco, int conf);
 typedef HRESULT(__stdcall* p)(void* ptr, SpeechX2, const wchar_t*, int);
-typedef HRESULT(__stdcall* p2)(const wchar_t* t, std::vector<uint8_t>* tx, bool XML);
+typedef HRESULT(__stdcall* p2)(const wchar_t* t, void* tx, bool XML, size_t iVoice);
 
 #ifdef STATICLIB
 HRESULT __stdcall  SpeechX1(void* ptr, SpeechX2 x2, const wchar_t* langx = L"en-us", int Mode = 0);
-HRESULT __stdcall  SpeechX3(const wchar_t* t, std::vector<uint8_t>* tx, bool XML);
+HRESULT __stdcall  SpeechX3(const wchar_t* t, void* tx, bool XML, size_t iVoice);
 #pragma comment(lib,"speechrecognition.lib")
 #endif
 
@@ -42,7 +42,7 @@ HRESULT __stdcall  x2(void* ptr, const wchar_t* reco, int conf)
 	if (P2)
 	{
 		std::vector<uint8_t> tt;
-		P2(reco, &tt, 0);
+		P2(reco, &tt, 0,0);
 
 		FILE* fw = 0;
 		DeleteFile(L"1.wav");
@@ -89,7 +89,20 @@ int main()
 	{
 		std::wcout << std::get<0>(e) << L" - " << std::get<1>(e) << std::endl;
 	}
-	std::wcout << std::endl << L"Picking up first language. Please speak." << std::endl;
+
+	// Detect TTS
+	std::vector<std::tuple<std::wstring, std::wstring>> sx2;
+	P2(0,(void*)&sx2,0,0);
+	std::wcout << L"TTS Engines found" << std::endl;
+	for (auto& e : sx2)
+	{
+		std::wcout << std::get<0>(e) << L" - " << std::get<1>(e) << std::endl;
+	}
+
+
+
+	std::wcout << std::endl << L"Picking up first TTS voice and first language. Please speak." << std::endl;
+
 
 
 	P(P2, x2, std::get<1>(sx[0]).c_str(), 0);
