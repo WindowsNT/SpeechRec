@@ -1,4 +1,4 @@
-# Speech Recognition C++ with UWP for plain Win32
+# Speech Recognition and Speech Synthesis C++ with UWP for plain Win32
 
 An easy way to implement Windows SpeechRecognizer and SpeechSynthesizer UWP in your Win32 Apps. Available as DLL and as Static library, in both x64 and x86.
 
