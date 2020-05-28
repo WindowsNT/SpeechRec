@@ -122,3 +122,58 @@ HRESULT __stdcall  SpeechX1(void* ptr, SpeechX2 x2, const wchar_t* langx = L"en-
 
 //	sr.CurrentLanguage = L"";
 }
+
+
+
+
+#ifndef STATICLIB
+extern "C"
+#endif
+HRESULT __stdcall  SpeechX3(const wchar_t* t, std::vector<uint8_t> * tx, bool XML)
+{
+	if (!tx)
+		return E_POINTER;
+	tx->clear();
+	HANDLE hEv1 = CreateEvent(0, 0, 0, 0);
+	try
+	{
+		SpeechSynthesizer sy;
+		IAsyncOperation<SpeechSynthesisStream> as = XML ? sy.SynthesizeSsmlToStreamAsync(t) : sy.SynthesizeTextToStreamAsync(t);
+		as.Completed([&](const IInspectable& sender, AsyncStatus h)
+			{
+				if (h != AsyncStatus::Completed)
+				{
+					SetEvent(hEv1);
+					return;
+				}
+				SpeechSynthesisStream sse = as.GetResults();
+//				auto is = sse.GetInputStreamAt(0);
+				auto sz = sse.Size();
+				Buffer bu((uint32_t)sz);
+				InputStreamOptions opt = InputStreamOptions::None;
+				sse.ReadAsync(bu, (uint32_t)sz, opt);
+				const uint8_t* d = bu.data();
+				tx->resize(bu.Length());
+				memcpy(tx->data(), d, tx->size());
+				SetEvent(hEv1);
+			});
+		for (int i = 0; i < 100; i++)
+		{
+			if (WaitForSingleObject(hEv1, 0) == WAIT_OBJECT_0)
+				break;
+			Sleep(100);
+		}
+		CloseHandle(hEv1);
+		return S_OK;
+	}
+	catch (winrt::hresult_error const& ex)
+	{
+		winrt::hresult hr = ex.to_abi(); // HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND).
+		winrt::hstring message = ex.message(); // The system cannot find the file specified.
+		std::wstring str = message.c_str();
+		MessageBox(0, str.c_str(), 0, 0);
+	}
+
+	CloseHandle(hEv1);
+	return E_FAIL;
+}

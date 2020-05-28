@@ -15,6 +15,7 @@
 #include <winrt/Windows.Media.SpeechRecognition.h>
 #include <winrt/Windows.Media.SpeechSynthesis.h>
 #include <winrt/Windows.Globalization.h>
+#include <winrt/Windows.Storage.Streams.h>
 
 
 #pragma comment(lib, "windowsapp")
@@ -24,4 +25,5 @@ using namespace Windows::Foundation;
 using namespace Windows::Media::SpeechRecognition;
 using namespace Windows::Media::SpeechSynthesis;
 using namespace Windows::Globalization;
+using namespace winrt::Windows::Storage::Streams;
 
