@@ -13,6 +13,7 @@ HRESULT __stdcall  SpeechX3(const wchar_t* t, std::vector<uint8_t> * tx, bool XM
 Call SpeechX3, passing the text and a vector to return the wave data. Use MS Speech Synthesis Markup Language for XML
 https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/speech-synthesis-markup?tabs=csharp
 
+
 ## Speech to Text
 
 Mode = 2, pass a std::vector<std::tuple<std::wstring,std::wstring>>> as a ptr to get all languages supported
